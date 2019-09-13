@@ -86,19 +86,22 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:textSize="@dimen/add_text_size"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="btnSaveClick"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear"
             android:textSize="@dimen/add_text_size"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="btnCLearClick"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back"
             android:textSize="@dimen/add_text_size"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="btnBackClick"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

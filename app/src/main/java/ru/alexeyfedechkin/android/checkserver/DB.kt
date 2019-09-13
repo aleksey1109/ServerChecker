@@ -7,7 +7,7 @@ import ru.alexeyfedechkin.android.checkserver.Models.Server
 
 class DB {
 
-    private lateinit var realm:Realm
+    lateinit var realm:Realm
 
     fun init(context:Context){
         Realm.init(context)

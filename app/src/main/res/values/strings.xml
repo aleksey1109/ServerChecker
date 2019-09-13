@@ -8,4 +8,6 @@
     <string name="back">назад</string>
     <string name="save">сохранить</string>
     <string name="clear">очистить</string>
+    <string name="saveSucces">Запись сохранена</string>
+    <string name="saveFail">Ошибка при сохранение записи</string>
 </resources>
