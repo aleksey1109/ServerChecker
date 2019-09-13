@@ -43,6 +43,8 @@ dependencies {
     implementation 'io.realm:realm-gradle-plugin:5.15.1'
     kapt "org.parceler:parceler:$parcelerVersion"
     implementation "org.parceler:parceler-api:$parcelerVersion"
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
 }
 
 kapt {
