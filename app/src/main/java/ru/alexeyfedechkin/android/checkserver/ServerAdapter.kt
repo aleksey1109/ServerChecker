@@ -38,9 +38,9 @@ class ServerAdapter(
         val server = getProduct(position)
         view?.findViewById<TextView>(R.id.textView_serverName)?.text = server.name
         val status = view?.findViewById<RelativeLayout>(R.id.status)
-        when(server.status){
+        when(Net.checkStatus(server)){
             ServerStatus.OFFLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_offline)
-            ServerStatus.ONLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_offline)
+            ServerStatus.ONLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_online)
         }
         return view!!
     }

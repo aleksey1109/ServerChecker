@@ -2,5 +2,6 @@ package ru.alexeyfedechkin.android.checkserver
 
 enum class ServerStatus {
     ONLINE,
-    OFFLINE
+    OFFLINE,
+    INVALID_RESPONSE_CODE
 }

@@ -1,23 +1,20 @@
 package ru.alexeyfedechkin.android.checkserver.Models
 
 import io.realm.RealmObject
-import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
-import ru.alexeyfedechkin.android.checkserver.Net
-import ru.alexeyfedechkin.android.checkserver.ServerStatus
 
-open class Server(
-    @PrimaryKey var id:Long,
+open class Server(): RealmObject(){
+    @PrimaryKey var id:Long = 0
     /**
      *
      */
-    var name:String,
+    var name:String = ""
     /**
      *
      */
-    var responseCode:Int
-): RealmObject(){
-    val status:ServerStatus by lazy {
-        Net.checkServerStatus(responseCode)
-    }
+    var responseCode:Int = 0
+    /**
+     *
+     */
+    var hostname:String = ""
 }

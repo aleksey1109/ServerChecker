@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_text_size">15sp</dimen>
+    <dimen name="add_text_size">20sp</dimen>
     <dimen name="main_btn_margin">3dp</dimen>
     <dimen name="circle_size">30dp</dimen>
 </resources>
