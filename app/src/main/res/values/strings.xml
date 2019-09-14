@@ -11,4 +11,6 @@
     <string name="saveSucces">Запись сохранена</string>
     <string name="saveFail">Ошибка при сохранение записи</string>
     <string name="nameAlreadyExist">Данное имя уже существует</string>
+    <string name="AddBackAlertTitle">Отмена</string>
+    <string name="AddBackAlertMessage">Вы действительно хотите выйти без сохранения</string>
 </resources>

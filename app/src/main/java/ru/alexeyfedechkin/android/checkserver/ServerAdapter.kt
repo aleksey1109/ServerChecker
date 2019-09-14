@@ -11,21 +11,18 @@ import ru.alexeyfedechkin.android.checkserver.Models.Server
 import ru.alexeyfedechkin.android.checkserver.Network.Net
 
 /**
- * TODO
- *
- * @property servers
+ * custom listView adapter to show server status
+ * @property servers list of server
  * @constructor
- * TODO
- *
- * @param context
+ * @param context activity context
  */
 class ServerAdapter(
     context: Context,
-    var servers: ArrayList<Server>) : BaseAdapter() {
-    var layoutInflater:LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    // list of servers
+    private var servers: ArrayList<Server>) : BaseAdapter() {
+    private var layoutInflater:LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     /**
-     * TODO
-     *
+     * get view with server item
      * @param position
      * @param convertView
      * @param parent
@@ -36,8 +33,9 @@ class ServerAdapter(
         if (view == null){
             view = layoutInflater.inflate(R.layout.server_item, parent,false)
         }
-        val server = getProduct(position)
+        val server = getServer(position)
         view?.findViewById<TextView>(R.id.textView_serverName)?.text = server.name
+        view?.findViewById<TextView>(R.id.editText_hostname)?.text   = server.hostname
         val status = view?.findViewById<RelativeLayout>(R.id.status)
         when(Net.checkStatus(server)){
             ServerStatus.OFFLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_offline)
@@ -47,39 +45,37 @@ class ServerAdapter(
     }
 
     /**
-     * TODO
-     *
-     * @param position
-     * @return
+     * get Server by giving position
+     * @param position server index
+     * @return server by giving position
      */
-    fun getProduct(position: Int):Server{
+    private fun getServer(position: Int):Server{
         return getItem(position) as Server
     }
 
     /**
-     * TODO
-     *
-     * @param position
-     * @return
+     * get server by position
+     * @param position item position
+     * @return server item
      */
     override fun getItem(position: Int): Any {
         return servers[position]
     }
 
     /**
-     * TODO
-     *
-     * @param position
-     * @return
+     * get server id
+     * for this adapter item id and position is equals
+     * @param position item position
+     * @return requested id of item
      */
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
     /**
-     * TODO
-     *
-     * @return
+     * get count of servers in list
+     * @see ServerAdapter.servers
+     * @return count of object in listView
      */
     override fun getCount(): Int {
         return servers.count()

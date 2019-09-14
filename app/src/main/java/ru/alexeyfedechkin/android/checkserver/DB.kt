@@ -6,18 +6,16 @@ import io.realm.RealmResults
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import ru.alexeyfedechkin.android.checkserver.Models.Server
 
-class DB {
-
-    lateinit var context: Context
-
-    fun init(context:Context){
-        this.context = context
-    }
+/**
+ * realm framework wrapper to perform operation with database
+ * @property context activity context
+ */
+class DB(var context: Context) {
 
     /**
-     * TODO
-     *
-     * @return
+     * get all server store in database
+     * @see Server
+     * @return List of servers
      */
     fun getServers():ArrayList<Server>{
         Realm.init(context)
@@ -28,7 +26,11 @@ class DB {
         return results as ArrayList<Server>
     }
 
-
+    /**
+     * save server instance in database
+     * operation is blocking
+     * @param server server to save in database
+     */
     fun saveServer(server: Server) {
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
@@ -38,6 +40,7 @@ class DB {
             realm.commitTransaction()
             realm.close()
         } catch (ex: RealmPrimaryKeyConstraintException){
+            //if insert returned exception
             realm.close()
             throw ex
         }

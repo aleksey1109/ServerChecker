@@ -1,8 +1,13 @@
 package ru.alexeyfedechkin.android.checkserver.Network
 
-
+/**
+ *
+ */
 object Http {
 
+    /**
+     * list of all http code
+     */
     val responsesCodes = listOf<Int>(
         100,
         101,
@@ -77,6 +82,11 @@ object Http {
         525,
         526)
 
+    /**
+     * validate http code
+     * @param responseCode response code from user input
+     * @return true if this number is a http response code
+     */
     fun validateResponseCode(responseCode:Int):Boolean{
         return responsesCodes.contains(responseCode)
     }
