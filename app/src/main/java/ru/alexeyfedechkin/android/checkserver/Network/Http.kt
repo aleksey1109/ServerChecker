@@ -3,7 +3,7 @@ package ru.alexeyfedechkin.android.checkserver.Network
 
 object Http {
 
-    val  responsesCodes = listOf<Int>(
+    val responsesCodes = listOf<Int>(
         100,
         101,
         102,
