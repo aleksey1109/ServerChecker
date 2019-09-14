@@ -8,6 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
 import ru.alexeyfedechkin.android.checkserver.Models.Server
+import ru.alexeyfedechkin.android.checkserver.Network.Net
 
 /**
  * TODO

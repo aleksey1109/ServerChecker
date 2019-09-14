@@ -1,6 +1,7 @@
-package ru.alexeyfedechkin.android.checkserver
+package ru.alexeyfedechkin.android.checkserver.Network
 
 import ru.alexeyfedechkin.android.checkserver.Models.Server
+import ru.alexeyfedechkin.android.checkserver.ServerStatus
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -13,7 +14,7 @@ object Net {
      * @param hostname
      * @return
      */
-    fun checkServerStatus(axpectedResponseCode:Int, hostname:String):ServerStatus{
+    fun checkServerStatus(axpectedResponseCode:Int, hostname:String): ServerStatus {
         try {
             val url = URL(hostname)
             val httpUrlConnection = url.openConnection() as HttpURLConnection
@@ -31,7 +32,10 @@ object Net {
         }
     }
 
-    fun checkStatus(server:Server):ServerStatus{
-        return checkServerStatus(server.responseCode,server.hostname)
+    fun checkStatus(server:Server): ServerStatus {
+        return checkServerStatus(
+            server.responseCode,
+            server.hostname
+        )
     }
 }

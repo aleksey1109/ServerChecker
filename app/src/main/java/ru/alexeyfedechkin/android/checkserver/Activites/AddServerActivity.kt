@@ -1,19 +1,25 @@
 package ru.alexeyfedechkin.android.checkserver.Activites
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import io.realm.Realm
+import androidx.appcompat.app.AppCompatActivity
+import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import ru.alexeyfedechkin.android.checkserver.DB
+import ru.alexeyfedechkin.android.checkserver.Network.Http
 import ru.alexeyfedechkin.android.checkserver.Models.Server
 import ru.alexeyfedechkin.android.checkserver.R
 
 class AddServerActivity : AppCompatActivity() {
     companion object{
         private const val TAG = "AddServerActivity"
+        private const val SERVER_NAME_KEY = "server_key"
+        private const val HOSTNAME_KEY= "hostname_key"
+        private const val RESPONSE_CODE_KEY= "response_code"
     }
     private val serverName:EditText by lazy  {
         findViewById<EditText>(R.id.editText_serverName)
@@ -30,14 +36,18 @@ class AddServerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_server)
         db.init(applicationContext)
-    }
+        serverName.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {}
 
-    /**
-     *
-     */
-    override fun onBackPressed() {
-        super.onBackPressed()
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if (serverName.currentTextColor == Color.RED){
+                    serverName.setTextColor(resources.getColor(R.color.black))
+                }
+            }
+        })
     }
 
     /**
@@ -46,25 +56,23 @@ class AddServerActivity : AppCompatActivity() {
      */
     fun btnSaveClick(view: View) {
         val server = Server()
+        if (serverName.text.isNullOrEmpty()){
+            serverName.setTextColor(resources.getColor(R.color.red))
+        } else if (hostname.text.isNullOrEmpty()){
+            hostname.setTextColor(resources.getColor(R.color.red))
+        } else if (responseCode.text.isNullOrEmpty() && Http.validateResponseCode(responseCode.text.toString().toInt())){
+            responseCode.setTextColor(resources.getColor(R.color.red))
+        }
         server.name = serverName.text.toString()
         server.hostname = hostname.text.toString()
         server.responseCode = responseCode.text.toString().toInt()
-        db.realm.executeTransactionAsync({
-             fun execute(bgRealm: Realm){
-                bgRealm.beginTransaction()
-                bgRealm.insert(server)
-                bgRealm.commitTransaction()
-                Log.i(TAG, "save new server")
-            }
-        }, {
-            fun onSuccess(){
-                Toast.makeText(applicationContext, resources.getText(R.string.saveSucces), Toast.LENGTH_SHORT)
-            }
-        }, {
-            fun onError(){
-                Toast.makeText(applicationContext, resources.getText(R.string.saveFail), Toast.LENGTH_SHORT)
-            }
-        })
+        try {
+            db.saveServer(server)
+            finish()
+        } catch (ex: RealmPrimaryKeyConstraintException){
+            Toast.makeText(applicationContext, resources.getText(R.string.nameAlreadyExist), Toast.LENGTH_SHORT)
+            serverName.setTextColor(resources.getColor(R.color.red))
+        }
     }
     /**
      * clear all fields
@@ -81,5 +89,37 @@ class AddServerActivity : AppCompatActivity() {
      */
     fun btnBackClick(view: View) {
         onBackPressed()
+    }
+
+
+
+    /**
+     * store fields text
+     * @param outState
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SERVER_NAME_KEY, serverName.text.toString())
+        outState.putString(HOSTNAME_KEY, hostname.text.toString())
+        outState.putString(RESPONSE_CODE_KEY, responseCode.text.toString())
+    }
+
+    /**
+     * restore fields text
+     * @param savedInstanceState
+     */
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        serverName.setText(savedInstanceState.getString(SERVER_NAME_KEY))
+        hostname.setText(savedInstanceState.getString(HOSTNAME_KEY))
+        responseCode.setText(savedInstanceState.getString(RESPONSE_CODE_KEY))
+    }
+
+    /**
+     *
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+
     }
 }
