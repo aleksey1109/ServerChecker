@@ -10,7 +10,13 @@ import ru.alexeyfedechkin.android.checkserver.Models.Server
  * realm framework wrapper to perform operation with database
  * @property context activity context
  */
-class DB(var context: Context) {
+class DB {
+
+    private lateinit var context: Context
+
+    fun init(context: Context){
+        this.context = context
+    }
 
     /**
      * get all server store in database

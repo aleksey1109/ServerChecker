@@ -1,4 +1,4 @@
-package ru.alexeyfedechkin.android.checkserver
+package ru.alexeyfedechkin.android.checkserver.Enums
 
 /**
  * enumeration of server status

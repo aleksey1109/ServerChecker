@@ -1,7 +1,7 @@
 package ru.alexeyfedechkin.android.checkserver.Network
 
 import ru.alexeyfedechkin.android.checkserver.Models.Server
-import ru.alexeyfedechkin.android.checkserver.ServerStatus
+import ru.alexeyfedechkin.android.checkserver.Enums.ServerStatus
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -13,19 +13,18 @@ object Net {
     /**
      * get server status
      * @see ServerStatus
-     * @param expectedResponseCode http code that expected from server
-     * @param hostname server url
      * @return
      */
-    fun checkServerStatus(expectedResponseCode:Int, hostname:String): ServerStatus {
+    fun checkServerStatus(server: Server): ServerStatus {
         return try {
-            val url = URL(hostname)
-            val httpUrlConnection = url.openConnection() as HttpURLConnection
+            val url = "${server.protocol.protocol}://${server.hostname}:${server.port}"
+            val uri = URL(url)
+            val httpUrlConnection = uri.openConnection() as HttpURLConnection
             httpUrlConnection.setRequestProperty("User-Agent", "Android Application")
             httpUrlConnection.setRequestProperty("Connection", "close")
             httpUrlConnection.connectTimeout = 1000 * 30
             httpUrlConnection.connect()
-            if (httpUrlConnection.responseCode == expectedResponseCode){
+            if (httpUrlConnection.responseCode == server.responseCode){
                 ServerStatus.ONLINE
             } else {
                 ServerStatus.INVALID_RESPONSE_CODE
@@ -33,17 +32,5 @@ object Net {
         } catch (ex: Throwable){
             ServerStatus.OFFLINE
         }
-    }
-
-    /**
-     * check server status by giving server instance
-     * @param server instance of server for which you need to check server status
-     * @return ServerStatus
-     */
-    fun checkStatus(server:Server): ServerStatus {
-        return checkServerStatus(
-            server.responseCode,
-            server.hostname
-        )
     }
 }

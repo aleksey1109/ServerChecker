@@ -13,4 +13,6 @@
     <string name="nameAlreadyExist">Данное имя уже существует</string>
     <string name="AddBackAlertTitle">Отмена</string>
     <string name="AddBackAlertMessage">Вы действительно хотите выйти без сохранения</string>
+    <string name="port">порт</string>
+
 </resources>

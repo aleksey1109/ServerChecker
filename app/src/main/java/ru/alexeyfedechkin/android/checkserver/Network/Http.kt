@@ -82,6 +82,8 @@ object Http {
         525,
         526)
 
+    private const val MAX_PORT_NUMBER = 65535
+
     /**
      * validate http code
      * @param responseCode response code from user input
@@ -89,5 +91,14 @@ object Http {
      */
     fun validateResponseCode(responseCode:Int):Boolean{
         return responsesCodes.contains(responseCode)
+    }
+
+    /**
+     *
+     * @param port
+     * @return
+     */
+    fun validatePort(port:Int):Boolean{
+        return port in 0..MAX_PORT_NUMBER
     }
 }

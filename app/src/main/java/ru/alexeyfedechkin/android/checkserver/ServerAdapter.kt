@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
+import ru.alexeyfedechkin.android.checkserver.Enums.ServerStatus
 import ru.alexeyfedechkin.android.checkserver.Models.Server
 import ru.alexeyfedechkin.android.checkserver.Network.Net
 
@@ -37,7 +38,7 @@ class ServerAdapter(
         view?.findViewById<TextView>(R.id.textView_serverName)?.text = server.name
         view?.findViewById<TextView>(R.id.editText_hostname)?.text   = server.hostname
         val status = view?.findViewById<RelativeLayout>(R.id.status)
-        when(Net.checkStatus(server)){
+        when(Net.checkServerStatus(server)){
             ServerStatus.OFFLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_offline)
             ServerStatus.ONLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_online)
         }

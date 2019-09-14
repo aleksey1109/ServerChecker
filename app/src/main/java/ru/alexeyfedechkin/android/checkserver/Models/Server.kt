@@ -2,6 +2,7 @@ package ru.alexeyfedechkin.android.checkserver.Models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import ru.alexeyfedechkin.android.checkserver.Enums.Protocol
 
 /**
  * POJO to realmObject
@@ -20,4 +21,19 @@ open class Server : RealmObject(){
      * server url
      */
     var hostname:String = ""
+    /**
+     *
+     */
+    var port:Int = 0
+    /**
+     *
+     */
+     var protocol: Protocol
+        get() {
+            return Protocol.valueOf(protocolDescription)
+        }
+        set(value) {
+            protocolDescription = value.protocol.toUpperCase()
+        }
+    private var protocolDescription:String = Protocol.HTTP.protocol
 }
