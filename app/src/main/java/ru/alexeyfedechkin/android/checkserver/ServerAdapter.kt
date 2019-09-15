@@ -1,5 +1,6 @@
 package ru.alexeyfedechkin.android.checkserver
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,7 @@ import ru.alexeyfedechkin.android.checkserver.network.Net
 /**
  * custom listView adapter to show server status
  * @property servers list of server
- * @constructor
+ * @constructor set application context and list of server
  * @param context activity context
  */
 class ServerAdapter(
@@ -31,6 +32,7 @@ class ServerAdapter(
      * @param parent
      * @return
      */
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         if (view == null){
