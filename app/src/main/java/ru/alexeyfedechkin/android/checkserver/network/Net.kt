@@ -1,7 +1,7 @@
-package ru.alexeyfedechkin.android.checkserver.Network
+package ru.alexeyfedechkin.android.checkserver.network
 
-import ru.alexeyfedechkin.android.checkserver.Models.Server
-import ru.alexeyfedechkin.android.checkserver.Enums.ServerStatus
+import ru.alexeyfedechkin.android.checkserver.models.Server
+import ru.alexeyfedechkin.android.checkserver.enums.ServerStatus
 import java.net.HttpURLConnection
 import java.net.URL
 

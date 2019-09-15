@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activites.MainActivity"
+    tools:context=".activites.MainActivity"
     android:gravity="bottom">
 
     <LinearLayout
@@ -32,15 +32,10 @@
             android:onClick="btnDeleteClick"/>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/footer">
-
-        <ListView
+    <ListView
             android:id="@+id/serverList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </ScrollView>
+            android:layout_height="match_parent"
+        android:layout_below="@id/footer"/>
 
 </RelativeLayout>

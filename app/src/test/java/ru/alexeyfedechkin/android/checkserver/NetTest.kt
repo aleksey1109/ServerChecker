@@ -3,10 +3,10 @@ package ru.alexeyfedechkin.android.checkserver
 import org.junit.Test
 
 import org.junit.Assert.*
-import ru.alexeyfedechkin.android.checkserver.Enums.Protocol
-import ru.alexeyfedechkin.android.checkserver.Enums.ServerStatus
-import ru.alexeyfedechkin.android.checkserver.Models.Server
-import ru.alexeyfedechkin.android.checkserver.Network.Net
+import ru.alexeyfedechkin.android.checkserver.enums.Protocol
+import ru.alexeyfedechkin.android.checkserver.enums.ServerStatus
+import ru.alexeyfedechkin.android.checkserver.models.Server
+import ru.alexeyfedechkin.android.checkserver.network.Net
 
 class NetTest {
 

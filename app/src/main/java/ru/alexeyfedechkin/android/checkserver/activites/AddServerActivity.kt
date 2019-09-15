@@ -1,21 +1,19 @@
-package ru.alexeyfedechkin.android.checkserver.Activites
+package ru.alexeyfedechkin.android.checkserver.activites
 
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import ru.alexeyfedechkin.android.checkserver.DB
-import ru.alexeyfedechkin.android.checkserver.Enums.Protocol
-import ru.alexeyfedechkin.android.checkserver.Models.Server
-import ru.alexeyfedechkin.android.checkserver.Network.Http
+import ru.alexeyfedechkin.android.checkserver.enums.Protocol
+import ru.alexeyfedechkin.android.checkserver.models.Server
+import ru.alexeyfedechkin.android.checkserver.network.Http
 import ru.alexeyfedechkin.android.checkserver.R
+
 
 /**
  * activity to add new servers
@@ -110,7 +108,8 @@ class AddServerActivity : AppCompatActivity() {
             arrayAdapter.add(protocol.protocol)
         }
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        findViewById<Spinner>(R.id.spinner_protocol).adapter = arrayAdapter
+        val protocolSpinner = findViewById<Spinner>(R.id.spinner_protocol)
+        protocolSpinner.adapter = arrayAdapter
     }
 
     /**
@@ -179,12 +178,12 @@ class AddServerActivity : AppCompatActivity() {
         }
         if (responseCode.text.isNullOrEmpty()){
             responseCode.setTextColor(resources.getColor(R.color.red))
-        } else if (Http.validateResponseCode(responseCode.text.toString().toInt())){
+        } else if (!Http.validateResponseCode(responseCode.text.toString().toInt())){
             responseCode.setTextColor(resources.getColor(R.color.red))
         }
         if (port.text.isNullOrEmpty()){
             port.setTextColor(resources.getColor(R.color.red))
-        } else if (Http.validatePort(port.text.toString().toInt())){
+        } else if (!Http.validatePort(port.text.toString().toInt())){
             port.setTextColor(resources.getColor(R.color.red))
         }
         if (    serverName.currentTextColor     == Color.RED    ||
@@ -203,6 +202,7 @@ class AddServerActivity : AppCompatActivity() {
         serverName.text.clear()
         hostname.text.clear()
         responseCode.text.clear()
+        protocol.setSelection(0)
     }
     /**
      * back to the main activity

@@ -1,8 +1,8 @@
-package ru.alexeyfedechkin.android.checkserver.Models
+package ru.alexeyfedechkin.android.checkserver.models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import ru.alexeyfedechkin.android.checkserver.Enums.Protocol
+import ru.alexeyfedechkin.android.checkserver.enums.Protocol
 
 /**
  * POJO to realmObject

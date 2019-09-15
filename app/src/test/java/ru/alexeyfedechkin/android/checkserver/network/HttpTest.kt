@@ -1,4 +1,4 @@
-package ru.alexeyfedechkin.android.checkserver.Network
+package ru.alexeyfedechkin.android.checkserver.network
 
 import org.junit.Test
 

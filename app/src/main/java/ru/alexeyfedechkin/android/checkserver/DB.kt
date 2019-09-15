@@ -2,9 +2,8 @@ package ru.alexeyfedechkin.android.checkserver
 
 import android.content.Context
 import io.realm.Realm
-import io.realm.RealmResults
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
-import ru.alexeyfedechkin.android.checkserver.Models.Server
+import ru.alexeyfedechkin.android.checkserver.models.Server
 
 /**
  * realm framework wrapper to perform operation with database

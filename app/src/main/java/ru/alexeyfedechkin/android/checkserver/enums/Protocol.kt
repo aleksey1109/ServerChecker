@@ -1,4 +1,4 @@
-package ru.alexeyfedechkin.android.checkserver.Enums
+package ru.alexeyfedechkin.android.checkserver.enums
 
 enum class Protocol(val protocol: String) {
     HTTP("http"),

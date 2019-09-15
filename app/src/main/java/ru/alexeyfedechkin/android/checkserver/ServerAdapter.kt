@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
-import ru.alexeyfedechkin.android.checkserver.Enums.ServerStatus
-import ru.alexeyfedechkin.android.checkserver.Models.Server
-import ru.alexeyfedechkin.android.checkserver.Network.Net
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import ru.alexeyfedechkin.android.checkserver.enums.ServerStatus
+import ru.alexeyfedechkin.android.checkserver.models.Server
+import ru.alexeyfedechkin.android.checkserver.network.Net
 
 /**
  * custom listView adapter to show server status
@@ -20,7 +22,7 @@ import ru.alexeyfedechkin.android.checkserver.Network.Net
 class ServerAdapter(
     context: Context,
     // list of servers
-    private var servers: ArrayList<Server>) : BaseAdapter() {
+    var servers: ArrayList<Server>) : BaseAdapter() {
     private var layoutInflater:LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     /**
      * get view with server item
@@ -36,11 +38,20 @@ class ServerAdapter(
         }
         val server = getServer(position)
         view?.findViewById<TextView>(R.id.textView_serverName)?.text = server.name
-        view?.findViewById<TextView>(R.id.editText_hostname)?.text   = server.hostname
+        view?.findViewById<TextView>(R.id.textView_hostname)?.text = "${server.protocol.protocol}://${server.hostname}:${server.port}"
         val status = view?.findViewById<RelativeLayout>(R.id.status)
-        when(Net.checkServerStatus(server)){
-            ServerStatus.OFFLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_offline)
-            ServerStatus.ONLINE -> status!!.background = view?.resources!!.getDrawable(R.drawable.circle_online)
+        doAsync {
+            val hostStatus = Net.checkServerStatus(server)
+            uiThread {
+            when(hostStatus) {
+                ServerStatus.OFFLINE -> status!!.background =
+                    view?.resources!!.getDrawable(R.drawable.circle_offline)
+                ServerStatus.ONLINE -> status!!.background =
+                    view?.resources!!.getDrawable(R.drawable.circle_online)
+                ServerStatus.INVALID_RESPONSE_CODE -> status!!.background =
+                    view?.resources!!.getDrawable(R.drawable.circle_invalid_resonse_code)
+            }
+            }
         }
         return view!!
     }
@@ -81,4 +92,5 @@ class ServerAdapter(
     override fun getCount(): Int {
         return servers.count()
     }
+
 }

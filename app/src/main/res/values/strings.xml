@@ -14,5 +14,5 @@
     <string name="AddBackAlertTitle">Отмена</string>
     <string name="AddBackAlertMessage">Вы действительно хотите выйти без сохранения</string>
     <string name="port">порт</string>
-
+    <string name="protocol">протокол</string>
 </resources>
