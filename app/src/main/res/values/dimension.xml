@@ -4,4 +4,5 @@
     <dimen name="add_text_size">20sp</dimen>
     <dimen name="main_btn_margin">3dp</dimen>
     <dimen name="circle_size">30dp</dimen>
+    <dimen name="server_item_margin">20dp</dimen>
 </resources>

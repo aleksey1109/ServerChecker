@@ -17,14 +17,9 @@ object Net {
      */
     fun checkServerStatus(server: Server): ServerStatus {
         return try {
-            val url = "${server.protocol.protocol}://${server.hostname}:${server.port}"
-            val uri = URL(url)
-            val httpUrlConnection = uri.openConnection() as HttpURLConnection
-            httpUrlConnection.setRequestProperty("User-Agent", "Android Application")
-            httpUrlConnection.setRequestProperty("Connection", "close")
-            httpUrlConnection.connectTimeout = 1000 * 30
-            httpUrlConnection.connect()
-            if (httpUrlConnection.responseCode == server.responseCode){
+            val url = buildUrl(server)
+
+            if (ping(url) == server.responseCode){
                 ServerStatus.ONLINE
             } else {
                 ServerStatus.INVALID_RESPONSE_CODE
@@ -32,5 +27,23 @@ object Net {
         } catch (ex: Throwable){
             ServerStatus.OFFLINE
         }
+    }
+
+    fun checkServerResponse(server: Server):Int{
+        return ping(buildUrl(server))
+    }
+
+    private fun ping(url:String): Int {
+        val uri = URL(url)
+        val httpUrlConnection = uri.openConnection() as HttpURLConnection
+        httpUrlConnection.setRequestProperty("User-Agent", "Android Application")
+        httpUrlConnection.setRequestProperty("Connection", "close")
+        httpUrlConnection.connectTimeout = 1000 * 30
+        httpUrlConnection.connect()
+        return httpUrlConnection.responseCode
+    }
+
+    private fun buildUrl(server: Server):String{
+        return "${server.protocol.protocol}://${server.hostname}:${server.port}"
     }
 }

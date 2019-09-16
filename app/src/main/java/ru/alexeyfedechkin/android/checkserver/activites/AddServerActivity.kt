@@ -1,18 +1,24 @@
 package ru.alexeyfedechkin.android.checkserver.activites
 
+import android.app.SearchManager
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import ru.alexeyfedechkin.android.checkserver.DB
 import ru.alexeyfedechkin.android.checkserver.enums.Protocol
 import ru.alexeyfedechkin.android.checkserver.models.Server
 import ru.alexeyfedechkin.android.checkserver.network.Http
 import ru.alexeyfedechkin.android.checkserver.R
+import ru.alexeyfedechkin.android.checkserver.network.Net
+import java.util.*
 
 
 /**
@@ -26,6 +32,7 @@ class AddServerActivity : AppCompatActivity() {
         private const val RESPONSE_CODE_KEY= "response_code"
         private const val PORT_KEY = "port_key"
         private const val PROTOCOL_KEY = "protocol_key"
+        private const val IS_USE_DEFAULT_PORT_KEY = "is_use_default_port_key"
     }
 
     private val serverName:EditText by lazy  {
@@ -44,6 +51,14 @@ class AddServerActivity : AppCompatActivity() {
     }
     private val protocol:Spinner by lazy {
         findViewById<Spinner>(R.id.spinner_protocol)
+    }
+    private val isUseDefaultPortCheckbox:CheckBox by lazy {
+        findViewById<CheckBox>(R.id.checkBox_isUserDefaultPort)
+    }
+
+    private val isUseDefaultPort:Boolean
+        get() {
+        return isUseDefaultPortCheckbox.isChecked
     }
 
     private val db:DB = DB()
@@ -102,6 +117,24 @@ class AddServerActivity : AppCompatActivity() {
                 }
             }
         })
+        protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (isUseDefaultPort){
+                    port.setText(Protocol.values()[position].defaultPort.toString())
+                }
+            }
+        }
+        isUseDefaultPortCheckbox.setOnClickListener  { view ->
+            port.isEnabled = !view.findViewById<CheckBox>(R.id.checkBox_isUserDefaultPort).isChecked
+            val prot = Protocol.isDefaultPort(port.text.toString().toInt())
+            if (prot != null){
+                protocol.setSelection(prot.position)
+            } else {
+                port.setText(Protocol.values()[protocol.selectedItemPosition].defaultPort.toString())
+            }
+        }
 
         val arrayAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_spinner_item)
         for (protocol in Protocol.values()){
@@ -123,6 +156,7 @@ class AddServerActivity : AppCompatActivity() {
         outState.putString(RESPONSE_CODE_KEY, responseCode.text.toString())
         outState.putString(PORT_KEY, port.text.toString())
         outState.putInt(PROTOCOL_KEY, protocol.selectedItemPosition)
+        outState.putBoolean(IS_USE_DEFAULT_PORT_KEY, isUseDefaultPort)
     }
 
     /**
@@ -136,18 +170,33 @@ class AddServerActivity : AppCompatActivity() {
         responseCode.setText(savedInstanceState.getString(RESPONSE_CODE_KEY))
         port.setText(savedInstanceState.getString(PORT_KEY))
         protocol.setSelection(savedInstanceState.getInt(PROTOCOL_KEY))
+        isUseDefaultPortCheckbox.isChecked = savedInstanceState.getBoolean(IS_USE_DEFAULT_PORT_KEY)
     }
 
 
+    private var backPressed:Long = 0
     /**
-     *
+     *  displays a warning Toast about exit without saving data
      */
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (    serverName.text.isNotEmpty()    ||
+                hostname.text.isNotEmpty()      ||
+                responseCode.text.isNotEmpty()){
+            if (backPressed + 2000 > System.currentTimeMillis()){
+                super.onBackPressed()
+            }
+            else{
+                Toast.
+                    makeText(this,resources.getString(R.string.AddBackAlertMessage),
+                        Toast.LENGTH_SHORT).show()
+            }
+            backPressed = System.currentTimeMillis()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     /**
-     * validate data and
      * save data in database
      */
     fun btnSaveClick(view: View) {
@@ -155,11 +204,11 @@ class AddServerActivity : AppCompatActivity() {
         if (!validateData()){
             return
         }
-        server.name = serverName.text.toString()
-        server.hostname = hostname.text.toString()
+        server.name         = serverName.text.toString()
+        server.hostname     = hostname.text.toString()
         server.responseCode = responseCode.text.toString().toInt()
-        server.port = port.text.toString().toInt()
-        server.protocol = Protocol.values()[protocol.selectedItemPosition]
+        server.port         = port.text.toString().toInt()
+        server.protocol     = Protocol.values()[protocol.selectedItemPosition]
         try {
             db.saveServer(server)
             finish()
@@ -169,6 +218,11 @@ class AddServerActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * check text from field for corectness
+     * if data invalide set text color to red
+     * @return true if alla fields filled and correct
+     */
     private fun validateData():Boolean{
         if (serverName.text.isNullOrEmpty()){
             serverName.setTextColor(resources.getColor(R.color.red))
@@ -179,7 +233,7 @@ class AddServerActivity : AppCompatActivity() {
         if (responseCode.text.isNullOrEmpty()){
             responseCode.setTextColor(resources.getColor(R.color.red))
         } else if (!Http.validateResponseCode(responseCode.text.toString().toInt())){
-            responseCode.setTextColor(resources.getColor(R.color.red))
+
         }
         if (port.text.isNullOrEmpty()){
             port.setTextColor(resources.getColor(R.color.red))
@@ -203,11 +257,37 @@ class AddServerActivity : AppCompatActivity() {
         hostname.text.clear()
         responseCode.text.clear()
         protocol.setSelection(0)
+        port.setText(Protocol.values()[0].defaultPort.toString())
     }
     /**
      * back to the main activity
      */
     fun btnBackClick(view: View) {
         onBackPressed()
+    }
+
+    /**
+     * test server response
+     * @param view
+     */
+    fun btnCheckClick(view: View) {
+        if (!validateData()){
+            return
+        }
+        val server = Server()
+        server.name         = serverName.text.toString()
+        server.hostname     = hostname.text.toString()
+        server.responseCode = responseCode.text.toString().toInt()
+        server.port         = port.text.toString().toInt()
+        server.protocol     = Protocol.values()[protocol.selectedItemPosition]
+        doAsync {
+            val responseCode = Net.checkServerResponse(server)
+            uiThread {
+                Toast.makeText(this@AddServerActivity,
+                        "${resources.getString(R.string.expectedCode)} " +
+                                "${server.responseCode} \n ${resources.getString(R.string.actualCode)}" +
+                                " $responseCode", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

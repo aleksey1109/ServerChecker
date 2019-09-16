@@ -12,7 +12,11 @@
     <string name="saveFail">Ошибка при сохранение записи</string>
     <string name="nameAlreadyExist">Данное имя уже существует</string>
     <string name="AddBackAlertTitle">Отмена</string>
-    <string name="AddBackAlertMessage">Вы действительно хотите выйти без сохранения</string>
+    <string name="AddBackAlertMessage">Для выхода без сохранения данных нажмите еще раз</string>
     <string name="port">порт</string>
     <string name="protocol">протокол</string>
+    <string name="userDefault">использовать стандартный порт</string>
+    <string name="check">проверить</string>
+    <string name="expectedCode">ожидаемвый код:</string>
+    <string name="actualCode">фактический ответ сервера:</string>
 </resources>

@@ -89,7 +89,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:text="200"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/checkBox_isUserDefaultPort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/userDefault"
+                android:textSize="@dimen/add_text_size"
+                android:checked="true"/>
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +123,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
         </LinearLayout>
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/check"
+            android:textSize="@dimen/add_text_size"
+            android:onClick="btnCheckClick"/>
     </LinearLayout>
 
     <LinearLayout
