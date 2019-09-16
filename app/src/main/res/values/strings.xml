@@ -19,4 +19,5 @@
     <string name="check">проверить</string>
     <string name="expectedCode">ожидаемвый код:</string>
     <string name="actualCode">фактический ответ сервера:</string>
+    <string name="edit">редактировать</string>
 </resources>
