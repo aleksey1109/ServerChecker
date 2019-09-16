@@ -1,18 +1,20 @@
 package ru.alexeyfedechkin.android.checkserver.activites
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.ContextMenu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import ru.alexeyfedechkin.android.checkserver.DB
 import ru.alexeyfedechkin.android.checkserver.R
 import ru.alexeyfedechkin.android.checkserver.SavingKey
 import ru.alexeyfedechkin.android.checkserver.ServerAdapter
+import java.util.*
+
 
 /**
  * main activity
@@ -30,6 +32,24 @@ class MainActivity : AppCompatActivity() {
         val serverList = findViewById<ListView>(R.id.serverList)
         serverList.adapter = serverAdapter
         registerForContextMenu(serverList)
+        val mHandler = Handler()
+        val mTimer = Timer()
+        mTimer.schedule(object : TimerTask() {
+            override fun run() {
+                mHandler.post(Runnable {
+                    updateListServer()
+                })
+            }
+        }, 0, 1000)
+    }
+
+    /**
+     * TODO
+     *
+     */
+    fun updateListServer(){
+        serverAdapter.servers = db.getServers()
+        serverAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateContextMenu(
@@ -50,8 +70,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId){
             R.id.contextMenu_delete -> {
                 db.deleteServer(server)
-                serverAdapter.servers = db.getServers()
-                serverAdapter.notifyDataSetChanged()
+                updateListServer()
                 return true
             }
             R.id.contextMenu_edit -> {
@@ -83,4 +102,5 @@ class MainActivity : AppCompatActivity() {
         intent = Intent(this, AddServerActivity::class.java)
         startActivity(intent)
     }
+
 }

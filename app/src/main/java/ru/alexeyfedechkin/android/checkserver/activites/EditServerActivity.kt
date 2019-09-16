@@ -214,11 +214,15 @@ class EditServerActivity : AppCompatActivity() {
         server.protocol     = Protocol.values()[protocol.selectedItemPosition]
         doAsync {
             val responseCode = Net.checkServerResponse(server)
+            var rc = resources.getString(R.string.server_is_not_available)
+            if (responseCode != -1){
+                rc = responseCode.toString()
+            }
             uiThread {
                 Toast.makeText(this@EditServerActivity,
                     "${resources.getString(R.string.expectedCode)} " +
                             "${server.responseCode} \n ${resources.getString(R.string.actualCode)}" +
-                            " $responseCode", Toast.LENGTH_LONG).show()
+                            " $rc", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -245,7 +249,7 @@ class EditServerActivity : AppCompatActivity() {
         } else if (!Http.validatePort(port.text.toString().toInt())){
             port.setTextColor(resources.getColor(R.color.red))
         }
-        if (    serverName.currentTextColor     == Color.RED    ||
+        if (serverName.currentTextColor     == Color.RED    ||
             hostname.currentTextColor       == Color.RED    ||
             responseCode.currentTextColor   == Color.RED    ||
             port.currentTextColor           == Color.RED){

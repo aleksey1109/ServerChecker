@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
@@ -223,6 +224,8 @@ class AddServerActivity : AppCompatActivity() {
         }
         if (hostname.text.isNullOrEmpty()){
             hostname.setTextColor(resources.getColor(R.color.red))
+        } else if (!URLUtil.isValidUrl("${Protocol.values()[protocol.selectedItemPosition].protocol}://${hostname.text}")){
+            hostname.setTextColor(resources.getColor(R.color.red))
         }
         if (responseCode.text.isNullOrEmpty()){
             responseCode.setTextColor(resources.getColor(R.color.red))
@@ -276,11 +279,15 @@ class AddServerActivity : AppCompatActivity() {
         server.protocol     = Protocol.values()[protocol.selectedItemPosition]
         doAsync {
             val responseCode = Net.checkServerResponse(server)
+            var rc = resources.getString(R.string.server_is_not_available)
+            if (responseCode != -1){
+                rc = responseCode.toString()
+            }
             uiThread {
                 Toast.makeText(this@AddServerActivity,
                         "${resources.getString(R.string.expectedCode)} " +
                                 "${server.responseCode} \n ${resources.getString(R.string.actualCode)}" +
-                                " $responseCode", Toast.LENGTH_LONG).show()
+                                " $rc", Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -10,6 +10,8 @@ import java.net.URL
  */
 object Net {
 
+
+
     /**
      * get server status
      * @see ServerStatus
@@ -18,7 +20,6 @@ object Net {
     fun checkServerStatus(server: Server): ServerStatus {
         return try {
             val url = buildUrl(server)
-
             if (ping(url) == server.responseCode){
                 ServerStatus.ONLINE
             } else {
@@ -29,8 +30,18 @@ object Net {
         }
     }
 
+    /**
+     * TODO
+     *
+     * @param server
+     * @return
+     */
     fun checkServerResponse(server: Server):Int{
-        return ping(buildUrl(server))
+        return try {
+            ping(buildUrl(server))
+        }  catch (ex:Throwable){
+            return -1
+        }
     }
 
     private fun ping(url:String): Int {
@@ -38,7 +49,7 @@ object Net {
         val httpUrlConnection = uri.openConnection() as HttpURLConnection
         httpUrlConnection.setRequestProperty("User-Agent", "Android Application")
         httpUrlConnection.setRequestProperty("Connection", "close")
-        httpUrlConnection.connectTimeout = 1000 * 30
+        httpUrlConnection.connectTimeout = 1000
         httpUrlConnection.connect()
         return httpUrlConnection.responseCode
     }
