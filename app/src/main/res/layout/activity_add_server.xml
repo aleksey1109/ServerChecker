@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/serverName"
-                android:textSize="@dimen/add_text_size" />
+                android:textSize="@dimen/add_text_size"
+                android:labelFor="@id/editText_serverName"/>
 
             <EditText
                 android:id="@+id/editText_serverName"
@@ -46,7 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hostname"
-                android:textSize="@dimen/add_text_size" />
+                android:textSize="@dimen/add_text_size"
+                android:labelFor="@id/editText_hostname"/>
 
             <EditText
                 android:id="@+id/editText_hostname"
@@ -65,7 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/responseCode"
-                android:textSize="@dimen/add_text_size" />
+                android:textSize="@dimen/add_text_size"
+                android:labelFor="@id/editText_responseCode"/>
 
             <EditText
                 android:id="@+id/editText_responseCode"
@@ -84,7 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/port"
-                android:textSize="@dimen/add_text_size" />
+                android:textSize="@dimen/add_text_size"
+                android:labelFor="@id/editText_port"/>
 
             <EditText
                 android:id="@+id/editText_port"
@@ -118,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/protocol"
-                android:textSize="@dimen/add_text_size" />
+                android:textSize="@dimen/add_text_size"/>
 
             <Spinner
                 android:id="@+id/spinner_protocol"
@@ -139,6 +143,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        style="?attr/buttonBarButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
@@ -147,21 +152,24 @@
             android:text="@string/save"
             android:textSize="@dimen/add_text_size"
             android:layout_weight="1"
-            android:onClick="btnSaveClick"/>
+            android:onClick="btnSaveClick"
+            style="?attr/buttonBarButtonStyle"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear"
             android:textSize="@dimen/add_text_size"
             android:layout_weight="1"
-            android:onClick="btnCLearClick"/>
+            android:onClick="btnCLearClick"
+            style="?attr/buttonBarButtonStyle"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back"
             android:textSize="@dimen/add_text_size"
             android:layout_weight="1"
-            android:onClick="btnBackClick"/>
+            android:onClick="btnBackClick"
+            style="?attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
