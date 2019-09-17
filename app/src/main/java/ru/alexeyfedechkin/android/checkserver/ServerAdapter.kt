@@ -22,11 +22,11 @@ class ServerAdapter(
     var servers: ArrayList<Server>) : BaseAdapter() {
     private var layoutInflater:LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     /**
-     * get view with server item
-     * @param position
+     * get view with server item by giving position
+     * @param position position of item
      * @param convertView
      * @param parent
-     * @return
+     * @return view with server item
      */
     @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -36,9 +36,8 @@ class ServerAdapter(
         }
         val server = getServer(position)
         view?.findViewById<TextView>(R.id.textView_serverName)?.text = server.name
-        view?.findViewById<TextView>(R.id.textView_hostname)?.text = "${server.protocol.protocol}://${server.hostname}:${server.port}"
-        val status = view?.findViewById<RelativeLayout>(R.id.status)
-        val textStatus = view?.findViewById<TextView>(R.id.textView_status)
+        view?.findViewById<TextView>(R.id.textView_hostname)?.text=
+            "${server.protocol.protocol}://${server.hostname}:${server.port}"
         return view!!
     }
 
@@ -78,5 +77,4 @@ class ServerAdapter(
     override fun getCount(): Int {
         return servers.count()
     }
-
 }

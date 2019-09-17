@@ -1,5 +1,8 @@
 package ru.alexeyfedechkin.android.checkserver
 
+/**
+ * constant to persist data and transfer with intent
+ */
 class SavingKey {
     companion object{
         const val SERVER_NAME_KEY = "server_key"

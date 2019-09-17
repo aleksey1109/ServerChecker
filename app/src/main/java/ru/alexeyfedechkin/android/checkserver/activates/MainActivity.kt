@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateServerStatus(){
         for (srv in serverAdapter.servers){
             doAsync {
-                val hostStatus = Net.checkServerStatus(srv)
+                val hostStatus = Net.checkServerStatus(srv, applicationContext)
                 val rc = Net.checkServerResponse(srv)
                 val item = serverList.getChildAt(serverAdapter.servers.indexOf(srv))
                 val status = item.findViewById<RelativeLayout>(R.id.status)
@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                             textStatus?.text = rc.toString()
                             textStatus?.setTextColor(resources.getColor(R.color.red))
                         }
+                        ServerStatus.NO_INTERNET_ACCESS ->{
+                            textStatus?.text = resources.getString(R.string.no_internet_access)
+                            status!!.background = resources.getDrawable(R.drawable.circle_no_internet_access)
+                        }
                     }
                     loading.visibility = ProgressBar.INVISIBLE
                     loading.visibility = ProgressBar.GONE
@@ -114,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * set context menu layout
      * @param menu
      * @param v
      * @param menuInfo
@@ -129,9 +133,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
-     * @param item
-     * @return
+     * handle on context menu event
+     * @param item instance of selected item
+     * @return true if menu is handled
      */
     override fun onContextItemSelected(item: MenuItem): Boolean {
         super.onContextItemSelected(item)
@@ -154,16 +158,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * update server list and status on activity shown again
      */
     override fun onResume() {
         super.onResume()
-        setProgress()
         updateListServer()
+        setProgress()
+        updateServerStatus()
     }
 
     /**
-     *
+     * update server status
      */
     fun btnUpdateClick(view: View) {
         setProgress()

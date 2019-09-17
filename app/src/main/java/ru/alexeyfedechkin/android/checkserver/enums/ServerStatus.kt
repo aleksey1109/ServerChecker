@@ -15,5 +15,9 @@ enum class ServerStatus {
     /**
      * server online but returned unexpected http code
      */
-    INVALID_RESPONSE_CODE
+    INVALID_RESPONSE_CODE,
+    /**
+     * the internet on the device was turned off
+     */
+    NO_INTERNET_ACCESS
 }

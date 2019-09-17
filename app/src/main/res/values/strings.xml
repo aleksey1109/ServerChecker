@@ -19,6 +19,8 @@
     <string name="edit">редактировать</string>
     <string name="online">online</string>
     <string name="offline">offline</string>
+    <string name="no_internet_access">no connection</string>
     <string name="server_is_not_available">сервер не доступен</string>
     <string name="defaultPortPrompt">200</string>
+    <string name="delete">удалить</string>
 </resources>

@@ -6,12 +6,14 @@ package ru.alexeyfedechkin.android.checkserver.network
 object Http {
 
     /**
-     * list of all http code
+     * list of all default http response code
      */
     private val responsesCodes = listOf(
+        //Informational
         100,
         101,
         102,
+        //success
         200,
         201,
         202,
@@ -22,6 +24,7 @@ object Http {
         207,
         208,
         226,
+        //redirection
         300,
         301,
         302,
@@ -31,6 +34,7 @@ object Http {
         306,
         307,
         308,
+        //client error
         401,
         402,
         403,
@@ -62,6 +66,7 @@ object Http {
         451,
         452,
         499,
+        //server error
         500,
         501,
         502,
@@ -94,9 +99,9 @@ object Http {
     }
 
     /**
-     *
-     * @param port
-     * @return
+     * validate port
+     * @param port port from user input
+     * @return true if port is valid
      */
     fun validatePort(port:Int):Boolean{
         return port in 0..MAX_PORT_NUMBER
