@@ -27,9 +27,9 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/main_btn_margin"
             android:layout_weight="1"
-            android:text="@string/delete"
+            android:text="@string/update"
             android:textSize="@dimen/main_text_size"
-            android:onClick="btnDeleteClick"/>
+            android:onClick="btnUpdateClick"/>
     </LinearLayout>
 
     <ListView

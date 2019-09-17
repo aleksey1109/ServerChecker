@@ -1,18 +1,24 @@
 package ru.alexeyfedechkin.android.checkserver.activites
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.server_item.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import ru.alexeyfedechkin.android.checkserver.DB
 import ru.alexeyfedechkin.android.checkserver.R
 import ru.alexeyfedechkin.android.checkserver.SavingKey
 import ru.alexeyfedechkin.android.checkserver.ServerAdapter
+import ru.alexeyfedechkin.android.checkserver.enums.ServerStatus
+import ru.alexeyfedechkin.android.checkserver.network.Net
 import java.util.*
 
 
@@ -32,30 +38,91 @@ class MainActivity : AppCompatActivity() {
         val serverList = findViewById<ListView>(R.id.serverList)
         serverList.adapter = serverAdapter
         registerForContextMenu(serverList)
-        val mHandler = Handler()
-        val mTimer = Timer()
-        mTimer.schedule(object : TimerTask() {
+        setProgress()
+        Timer().schedule(object : TimerTask() {
             override fun run() {
-                mHandler.post(Runnable {
-                    updateListServer()
-                })
+                updateServerStatus()
             }
         }, 0, 1000)
     }
 
     /**
-     * TODO
-     *
+     * update list of server when object was added to database
      */
-    fun updateListServer(){
+    private fun updateListServer(){
         serverAdapter.servers = db.getServers()
         serverAdapter.notifyDataSetChanged()
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
+    /**
+     * show progress bar for item
+     */
+    private fun setProgress(){
+        for (srv in serverAdapter.servers){
+            val item = serverList.getChildAt(serverAdapter.servers.indexOf(srv))
+            if (item != null){
+                item.findViewById<ProgressBar>(R.id.progressBar_loading).visibility = ProgressBar.VISIBLE
+                val status = item.findViewById<RelativeLayout>(R.id.status)
+                val textStatus = item.findViewById<TextView>(R.id.textView_status)
+                status.visibility = RelativeLayout.INVISIBLE
+                status.visibility = RelativeLayout.GONE
+                textStatus.visibility = TextView.INVISIBLE
+                textStatus.visibility = TextView.GONE
+            }
+        }
+    }
+
+    /**
+     * check server availability
+     */
+    private fun updateServerStatus(){
+        for (srv in serverAdapter.servers){
+            doAsync {
+                val hostStatus = Net.checkServerStatus(srv)
+                val rc = Net.checkServerResponse(srv)
+                val item = serverList.getChildAt(serverAdapter.servers.indexOf(srv))
+                val status = item.findViewById<RelativeLayout>(R.id.status)
+                val textStatus = item.findViewById<TextView>(R.id.textView_status)
+                val loading = item.findViewById<ProgressBar>(R.id.progressBar_loading)
+                uiThread {
+                    if (textStatus.currentTextColor == Color.RED){
+                        textStatus.setTextColor(Color.BLACK)
+                    }
+                    when(hostStatus) {
+                        ServerStatus.OFFLINE -> {
+                            status!!.background =
+                                resources!!.getDrawable(R.drawable.circle_offline)
+                            textStatus?.text = resources!!.getString(R.string.offline)
+                        }
+                        ServerStatus.ONLINE -> {
+                            status!!.background =
+                                resources!!.getDrawable(R.drawable.circle_online)
+                            textStatus?.text = resources!!.getString(R.string.online)
+                        }
+                        ServerStatus.INVALID_RESPONSE_CODE -> {
+                            status!!.background =
+                                resources!!.getDrawable(R.drawable.circle_invalid_resonse_code)
+                            textStatus?.text = rc.toString()
+                            textStatus?.setTextColor(resources.getColor(R.color.red))
+                        }
+                    }
+                    loading.visibility = ProgressBar.INVISIBLE
+                    loading.visibility = ProgressBar.GONE
+                    status.visibility = RelativeLayout.VISIBLE
+                    textStatus.visibility = TextView.VISIBLE
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?,
+                                     menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val menuInflater = menuInflater
@@ -63,6 +130,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     override fun onContextItemSelected(item: MenuItem): Boolean {
         super.onContextItemSelected(item)
         val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
@@ -83,16 +155,21 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
+    /**
+     *
+     */
     override fun onResume() {
         super.onResume()
-        serverAdapter.servers = db.getServers()
-        serverAdapter.notifyDataSetChanged()
+        setProgress()
+        updateListServer()
     }
 
     /**
      *
      */
-    fun btnDeleteClick(view: View) {
+    fun btnUpdateClick(view: View) {
+        setProgress()
+        updateServerStatus()
     }
 
     /**

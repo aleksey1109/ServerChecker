@@ -5,4 +5,5 @@
     <dimen name="main_btn_margin">3dp</dimen>
     <dimen name="circle_size">30dp</dimen>
     <dimen name="server_item_margin">20dp</dimen>
+    <dimen name="progressBar_width">30dp</dimen>
 </resources>

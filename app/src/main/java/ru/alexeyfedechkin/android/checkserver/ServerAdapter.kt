@@ -43,30 +43,6 @@ class ServerAdapter(
         view?.findViewById<TextView>(R.id.textView_hostname)?.text = "${server.protocol.protocol}://${server.hostname}:${server.port}"
         val status = view?.findViewById<RelativeLayout>(R.id.status)
         val textStatus = view?.findViewById<TextView>(R.id.textView_status)
-        doAsync {
-            val hostStatus = Net.checkServerStatus(server)
-            val rc = Net.checkServerResponse(server)
-            uiThread {
-            when(hostStatus) {
-                ServerStatus.OFFLINE -> {
-                    status!!.background =
-                        view?.resources!!.getDrawable(R.drawable.circle_offline)
-                    textStatus?.text = view.resources!!.getString(R.string.offline)
-                }
-                ServerStatus.ONLINE -> {
-                    status!!.background =
-                        view?.resources!!.getDrawable(R.drawable.circle_online)
-                    textStatus?.text = view.resources!!.getString(R.string.online)
-                }
-                ServerStatus.INVALID_RESPONSE_CODE -> {
-                    status!!.background =
-                        view?.resources!!.getDrawable(R.drawable.circle_invalid_resonse_code)
-                    textStatus?.text = rc.toString()
-                    textStatus?.setTextColor(view.resources.getColor(R.color.red))
-                }
-            }
-            }
-        }
         return view!!
     }
 
