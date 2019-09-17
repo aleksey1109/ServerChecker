@@ -8,11 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import ru.alexeyfedechkin.android.checkserver.enums.ServerStatus
 import ru.alexeyfedechkin.android.checkserver.models.Server
-import ru.alexeyfedechkin.android.checkserver.network.Net
 
 /**
  * custom listView adapter to show server status

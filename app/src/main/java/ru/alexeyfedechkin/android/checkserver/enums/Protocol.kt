@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.alexeyfedechkin.android.checkserver.enums
 
 enum class Protocol(val protocol: String,
@@ -18,7 +20,7 @@ enum class Protocol(val protocol: String,
          * @return true if port known as default port for one of support protocol
          */
         fun isDefaultPort(port:Int):Protocol?{
-            for (protocol in Protocol.values()){
+            for (protocol in values()){
                 if (protocol.defaultPort == port){
                     return protocol
                 }

@@ -10,10 +10,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activites.EditServerActivity"></activity>
-        <activity android:name=".activites.AddServerActivity" />
-        <activity android:name=".activites.MainActivity">
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity android:name=".activates.EditServerActivity" />
+        <activity android:name=".activates.AddServerActivity" />
+        <activity android:name=".activates.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

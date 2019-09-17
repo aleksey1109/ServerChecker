@@ -20,6 +20,7 @@ class NetTest {
         assertEquals(
             ServerStatus.ONLINE,
             Net.checkServerStatus(server))
+        @Suppress("SpellCheckingInspection")
         server.hostname = "asasdfasdfttff"
         assertEquals(
             ServerStatus.OFFLINE,

@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activites.EditServerActivity">
+    tools:context=".activates.EditServerActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -32,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:singleLine="true"
-                />
+                android:inputType="text"
+                android:importantForAutofill="no" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,7 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:inputType="textUri"/>
+                android:inputType="textUri"
+                android:importantForAutofill="no" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:importantForAutofill="no" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,8 +89,9 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:inputType="number"
-                android:text="200"
-                android:enabled="false"/>
+                android:text="@string/defaultPortPrompt"
+                android:enabled="false"
+                android:importantForAutofill="no" />
         </LinearLayout>
 
         <LinearLayout
@@ -130,7 +133,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

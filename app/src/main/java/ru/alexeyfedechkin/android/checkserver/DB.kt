@@ -70,7 +70,7 @@ class DB {
      */
     fun updateServer(server: Server, sourceServer:Server){
         val realm = getSession()
-        realm.executeTransactionAsync(){realm ->
+        realm.executeTransactionAsync { realm ->
             realm.insertOrUpdate(server)
             if (server.name != sourceServer.name){
                 val server = realm.where(Server::class.java).equalTo("name", sourceServer.name).findAll()
@@ -82,7 +82,7 @@ class DB {
 
     /**
      * delete server
-     * @param server instanse of server to delete
+     * @param server instance of server to delete
      */
     fun deleteServer(server: Server){
         val realm = getSession()
@@ -101,7 +101,7 @@ class DB {
      * get server by name from database
      * blocking
      * @param name name of server
-     * @return server instanse from db by giving name
+     * @return server instance from db by giving name
      */
     fun getServerByName(name:String): Server {
         val realm = getSession()

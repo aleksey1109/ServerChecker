@@ -1,5 +1,6 @@
 package ru.alexeyfedechkin.android.checkserver.models
 
+import android.annotation.SuppressLint
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import ru.alexeyfedechkin.android.checkserver.enums.Protocol
@@ -32,6 +33,7 @@ open class Server : RealmObject(){
         get() {
             return Protocol.valueOf(protocolDescription)
         }
+        @SuppressLint("DefaultLocale")
         set(value) {
             protocolDescription = value.protocol.toUpperCase()
         }

@@ -8,7 +8,7 @@ object Http {
     /**
      * list of all http code
      */
-    val responsesCodes = listOf<Int>(
+    private val responsesCodes = listOf(
         100,
         101,
         102,

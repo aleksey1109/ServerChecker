@@ -1,16 +1,14 @@
-package ru.alexeyfedechkin.android.checkserver.activites
+package ru.alexeyfedechkin.android.checkserver.activates
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.server_item.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import ru.alexeyfedechkin.android.checkserver.DB

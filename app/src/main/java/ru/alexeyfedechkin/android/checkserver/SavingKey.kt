@@ -2,7 +2,6 @@ package ru.alexeyfedechkin.android.checkserver
 
 class SavingKey {
     companion object{
-        const val TAG = "AddServerActivity"
         const val SERVER_NAME_KEY = "server_key"
         const val HOSTNAME_KEY= "hostname_key"
         const val RESPONSE_CODE_KEY= "response_code"
