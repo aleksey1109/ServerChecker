@@ -3,6 +3,7 @@ package ru.alexeyfedechkin.android.checkserver
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -19,6 +20,7 @@ class ServerAdapter(
     context: Context,
     // list of servers
     var servers: ArrayList<Server>) : BaseAdapter() {
+
     private var layoutInflater:LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     /**
      * get view with server item by giving position

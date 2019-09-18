@@ -154,6 +154,13 @@ class EditServerActivity : AppCompatActivity() {
     }
 
     /**
+     *
+     */
+    override fun onBackPressed() {
+        finish()
+    }
+
+    /**
      * store fields text
      * @param outState
      */
@@ -200,7 +207,7 @@ class EditServerActivity : AppCompatActivity() {
         }
     }
     fun btnBackClick(view: View) {
-        onBackPressed()
+        finish()
     }
     fun btnCheckClick(view: View) {
         if (!validateData()){

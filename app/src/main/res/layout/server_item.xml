@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="?listPreferredItemHeight">
 
     <ProgressBar
         android:id="@+id/progressBar_loading"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateDrawable="@drawable/spinner_ring"
-        android:indeterminateOnly="true" />
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:id="@+id/status"
         android:layout_width="@dimen/circle_size"
-        android:layout_height="@dimen/circle_size" />
+        android:layout_height="@dimen/circle_size"
+        android:layout_marginLeft="4dp"/>
 
     <TextView
         android:id="@+id/textView_status"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/main_text_size" />
+        android:textSize="@dimen/main_text_size"
+        android:layout_marginLeft="7dp"/>
 
     <LinearLayout
         android:orientation="vertical"

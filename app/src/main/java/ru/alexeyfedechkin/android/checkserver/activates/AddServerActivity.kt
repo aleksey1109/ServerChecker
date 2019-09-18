@@ -260,7 +260,7 @@ class AddServerActivity : AppCompatActivity() {
      * back to the main activity
      */
     fun btnBackClick(view: View) {
-        onBackPressed()
+        finish()
     }
 
     /**

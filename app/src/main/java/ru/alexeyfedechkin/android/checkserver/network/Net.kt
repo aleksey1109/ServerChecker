@@ -75,7 +75,9 @@ object Net {
         httpUrlConnection.setRequestProperty("Connection", "close")
         httpUrlConnection.connectTimeout = 1000
         httpUrlConnection.connect()
-        return httpUrlConnection.responseCode
+        val res =  httpUrlConnection.responseCode
+        httpUrlConnection.disconnect()
+        return res
     }
 
     /**

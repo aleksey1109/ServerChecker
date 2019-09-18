@@ -51,16 +51,10 @@ class DB {
      */
     fun saveServer(server: Server) {
         val realm = getSession()
-        try {
-            realm.beginTransaction()
+        realm.executeTransaction(){
             realm.insert(server)
-            realm.commitTransaction()
-            realm.close()
-        } catch (ex: RealmPrimaryKeyConstraintException){
-            //if insert returned exception
-            realm.close()
-            throw ex
         }
+        realm.close()
     }
 
     /**
@@ -70,7 +64,7 @@ class DB {
      */
     fun updateServer(server: Server, sourceServer:Server){
         val realm = getSession()
-        realm.executeTransactionAsync { realm ->
+        realm.executeTransaction{ realm ->
             realm.insertOrUpdate(server)
             if (server.name != sourceServer.name){
                 val server = realm.where(Server::class.java).equalTo("name", sourceServer.name).findAll()
@@ -86,16 +80,13 @@ class DB {
      */
     fun deleteServer(server: Server){
         val realm = getSession()
-        try {
-            realm.beginTransaction()
+        realm.executeTransaction(){
             val server = realm.where(Server::class.java).equalTo("name", server.name).findAll()
             server.deleteAllFromRealm()
-            realm.commitTransaction()
-            realm.close()
-        } catch (ex:Exception){
-            realm.close()
         }
+        realm.close()
     }
+
 
     /**
      * get server by name from database

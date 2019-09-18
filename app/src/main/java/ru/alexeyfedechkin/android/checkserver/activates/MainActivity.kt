@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
                 updateServerStatus()
             }
-        }, 0, 1000)
+        }, 0, 2000)
     }
 
     /**
