@@ -153,6 +153,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.contextMenu_history -> {
+                val intent = Intent(this, HistoryActivity::class.java)
+                intent.putExtra(SavingKey.SERVER_NAME_TO_EDIT_KEY, server.name)
+                startActivity(intent)
+            }
         }
         return false
     }
