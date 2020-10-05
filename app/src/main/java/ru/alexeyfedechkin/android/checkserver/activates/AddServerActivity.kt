@@ -1,12 +1,13 @@
 package ru.alexeyfedechkin.android.checkserver.activates
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -18,33 +19,35 @@ import ru.alexeyfedechkin.android.checkserver.SavingKey.Companion.PORT_KEY
 import ru.alexeyfedechkin.android.checkserver.SavingKey.Companion.PROTOCOL_KEY
 import ru.alexeyfedechkin.android.checkserver.SavingKey.Companion.RESPONSE_CODE_KEY
 import ru.alexeyfedechkin.android.checkserver.SavingKey.Companion.SERVER_NAME_KEY
-import ru.alexeyfedechkin.android.checkserver.SavingKey.Companion.SERVER_NAME_TO_EDIT_KEY
 import ru.alexeyfedechkin.android.checkserver.enums.Protocol
 import ru.alexeyfedechkin.android.checkserver.models.Server
 import ru.alexeyfedechkin.android.checkserver.network.Http
 import ru.alexeyfedechkin.android.checkserver.network.Net
 
 
-class EditServerActivity : AppCompatActivity() {
-    private var sourceServer = Server()
-    private val serverName: EditText by lazy  {
+/**
+ * activity to add new servers
+ */
+class AddServerActivity : AppCompatActivity() {
+
+    private val serverName:EditText by lazy  {
         findViewById<EditText>(R.id.editText_serverName)
     }
 
-    private val hostname: EditText by lazy {
+    private val hostname:EditText by lazy {
         findViewById<EditText>(R.id.editText_hostname)
     }
 
-    private val responseCode: EditText by lazy{
+    private val responseCode:EditText by lazy{
         findViewById<EditText>(R.id.editText_responseCode)
     }
-    private val port: EditText by lazy {
+    private val port:EditText by lazy {
         findViewById<EditText>(R.id.editText_port)
     }
-    private val protocol: Spinner by lazy {
+    private val protocol:Spinner by lazy {
         findViewById<Spinner>(R.id.spinner_protocol)
     }
-    private val isUseDefaultPortCheckbox: CheckBox by lazy {
+    private val isUseDefaultPortCheckbox:CheckBox by lazy {
         findViewById<CheckBox>(R.id.checkBox_isUserDefaultPort)
     }
 
@@ -53,13 +56,13 @@ class EditServerActivity : AppCompatActivity() {
             return isUseDefaultPortCheckbox.isChecked
         }
 
-    private val db: DB = DB()
+    private val db:DB = DB()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_server)
+        setContentView(R.layout.activity_add_server)
         db.init(applicationContext)
-
-        serverName.addTextChangedListener(object : TextWatcher {
+        serverName.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -72,7 +75,7 @@ class EditServerActivity : AppCompatActivity() {
             }
         })
 
-        hostname.addTextChangedListener(object : TextWatcher {
+        hostname.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -85,7 +88,7 @@ class EditServerActivity : AppCompatActivity() {
             }
         })
 
-        responseCode.addTextChangedListener(object : TextWatcher {
+        responseCode.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -97,7 +100,7 @@ class EditServerActivity : AppCompatActivity() {
                 }
             }
         })
-        port.addTextChangedListener(object : TextWatcher {
+        port.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -135,30 +138,6 @@ class EditServerActivity : AppCompatActivity() {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val protocolSpinner = findViewById<Spinner>(R.id.spinner_protocol)
         protocolSpinner.adapter = arrayAdapter
-
-        val bundle = intent.extras
-        sourceServer = db.getServerByName(bundle?.getString(SERVER_NAME_TO_EDIT_KEY) as String)
-        fillData(sourceServer)
-    }
-
-    private fun fillData(server: Server){
-        serverName.setText(server.name)
-        hostname.setText(server.hostname)
-        responseCode.setText(server.responseCode.toString())
-        port.setText(server.port.toString())
-        val foundProtocol = Protocol.isDefaultPort(port.text.toString().toInt())
-        if (foundProtocol != null){
-            protocol.setSelection(foundProtocol.position)
-        } else {
-            port.setText(Protocol.values()[protocol.selectedItemPosition].defaultPort.toString())
-        }
-    }
-
-    /**
-     *
-     */
-    override fun onBackPressed() {
-        finish()
     }
 
     /**
@@ -189,6 +168,32 @@ class EditServerActivity : AppCompatActivity() {
         isUseDefaultPortCheckbox.isChecked = savedInstanceState.getBoolean(IS_USE_DEFAULT_PORT_KEY)
     }
 
+
+    private var backPressed:Long = 0
+    /**
+     *  displays a warning Toast about exit without saving data
+     */
+    override fun onBackPressed() {
+        if (    serverName.text.isNotEmpty()    ||
+            hostname.text.isNotEmpty()      ||
+            responseCode.text.isNotEmpty()){
+            if (backPressed + 2000 > System.currentTimeMillis()){
+                super.onBackPressed()
+            }
+            else{
+                Toast.
+                makeText(this,resources.getString(R.string.AddBackAlertMessage),
+                    Toast.LENGTH_SHORT).show()
+            }
+            backPressed = System.currentTimeMillis()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * save data in database
+     */
     fun btnSaveClick(view: View) {
         val server = Server()
         if (!validateData()){
@@ -200,16 +205,68 @@ class EditServerActivity : AppCompatActivity() {
         server.port         = port.text.toString().toInt()
         server.protocol     = Protocol.values()[protocol.selectedItemPosition]
         try {
-            db.updateServer(server, sourceServer)
+            db.saveServer(server)
             finish()
         } catch (ex: RealmPrimaryKeyConstraintException){
             Toast.makeText(applicationContext, resources.getText(R.string.nameAlreadyExist), Toast.LENGTH_SHORT).show()
             serverName.setTextColor(resources.getColor(R.color.red))
         }
     }
+
+    /**
+     * check text from field for correctness
+     * if data invalid set text color to red
+     * @return true if alla fields filled and correct
+     */
+    private fun validateData():Boolean{
+        if (serverName.text.isNullOrEmpty()){
+            serverName.setTextColor(resources.getColor(R.color.red))
+        }
+        if (hostname.text.isNullOrEmpty()){
+            hostname.setTextColor(resources.getColor(R.color.red))
+        } else if (!URLUtil.isValidUrl("${Protocol.values()[protocol.selectedItemPosition].protocol}://${hostname.text}")){
+            hostname.setTextColor(resources.getColor(R.color.red))
+        }
+        if (responseCode.text.isNullOrEmpty()){
+            responseCode.setTextColor(resources.getColor(R.color.red))
+        } else if (!Http.validateResponseCode(responseCode.text.toString().toInt())){
+
+        }
+        if (port.text.isNullOrEmpty()){
+            port.setTextColor(resources.getColor(R.color.red))
+        } else if (!Http.validatePort(port.text.toString().toInt())){
+            port.setTextColor(resources.getColor(R.color.red))
+        }
+        if (    serverName.currentTextColor     == Color.RED    ||
+            hostname.currentTextColor       == Color.RED    ||
+            responseCode.currentTextColor   == Color.RED    ||
+            port.currentTextColor           == Color.RED){
+            return false
+        }
+        return true
+    }
+
+    /**
+     * clear all fields
+     */
+    fun btnCLearClick(view: View) {
+        serverName.text.clear()
+        hostname.text.clear()
+        responseCode.text.clear()
+        protocol.setSelection(0)
+        port.setText(Protocol.values()[0].defaultPort.toString())
+    }
+    /**
+     * back to the main activity
+     */
     fun btnBackClick(view: View) {
         finish()
     }
+
+    /**
+     * test server response
+     * @param view
+     */
     fun btnCheckClick(view: View) {
         if (!validateData()){
             return
@@ -227,42 +284,11 @@ class EditServerActivity : AppCompatActivity() {
                 rc = responseCode.toString()
             }
             uiThread {
-                Toast.makeText(this@EditServerActivity,
+                Toast.makeText(this@AddServerActivity,
                     "${resources.getString(R.string.expectedCode)} " +
                             "${server.responseCode} \n ${resources.getString(R.string.actualCode)}" +
                             " $rc", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    /**
-     * check text from field for correctness
-     * if data invalid set text color to red
-     * @return true if alla fields filled and correct
-     */
-    private fun validateData():Boolean{
-        if (serverName.text.isNullOrEmpty()){
-            serverName.setTextColor(resources.getColor(R.color.red))
-        }
-        if (hostname.text.isNullOrEmpty()){
-            hostname.setTextColor(resources.getColor(R.color.red))
-        }
-        if (responseCode.text.isNullOrEmpty()){
-            responseCode.setTextColor(resources.getColor(R.color.red))
-        } else if (!Http.validateResponseCode(responseCode.text.toString().toInt())){
-
-        }
-        if (port.text.isNullOrEmpty()){
-            port.setTextColor(resources.getColor(R.color.red))
-        } else if (!Http.validatePort(port.text.toString().toInt())){
-            port.setTextColor(resources.getColor(R.color.red))
-        }
-        if (serverName.currentTextColor     == Color.RED    ||
-            hostname.currentTextColor       == Color.RED    ||
-            responseCode.currentTextColor   == Color.RED    ||
-            port.currentTextColor           == Color.RED){
-            return false
-        }
-        return true
     }
 }
