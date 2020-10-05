@@ -24,6 +24,7 @@ import ru.alexeyfedechkin.android.checkserver.models.Server
 import ru.alexeyfedechkin.android.checkserver.network.Http
 import ru.alexeyfedechkin.android.checkserver.network.Net
 
+
 class EditServerActivity : AppCompatActivity() {
     private var sourceServer = Server()
     private val serverName: EditText by lazy  {
