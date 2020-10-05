@@ -187,15 +187,15 @@ class AddServerActivity : AppCompatActivity() {
             server.protocol     = Protocol.values()[protocol.selectedItemPosition]
             doAsync {
                 val responseCode = Net.checkServerResponse(server)
-                var rc = resources.getString(R.string.server_is_not_available)
+                var resultMessage = resources.getString(R.string.server_is_not_available)
                 if (responseCode != -1){
-                    rc = responseCode.toString()
+                    resultMessage = responseCode.toString()
                 }
                 uiThread {
                     Toast.makeText(this@AddServerActivity,
                         "${resources.getString(R.string.expectedCode)} " +
                                 "${server.responseCode} \n ${resources.getString(R.string.actualCode)}" +
-                                " $rc", Toast.LENGTH_LONG).show()
+                                " $resultMessage", Toast.LENGTH_LONG).show()
                 }
             }
         }
