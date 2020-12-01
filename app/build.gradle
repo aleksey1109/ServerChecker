@@ -27,7 +27,7 @@ android {
 }
 
 buildscript {
-    ext.parcelerVersion = '1.1.11'
+    ext.parcelerVersion = '1.1.13'
 }
 
 
