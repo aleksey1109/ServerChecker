@@ -43,7 +43,7 @@ dependencies {
     implementation 'io.realm:realm-gradle-plugin:5.15.1'
     implementation "org.parceler:parceler-api:$parcelerVersion"
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
 }
 
 kapt {
